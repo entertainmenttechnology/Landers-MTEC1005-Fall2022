@@ -1,41 +1,31 @@
 /*
-  Servo example-- Sweep
-  Rotates motor 180 degrees and back
-
+  Servo example-- Knob
+  Control position of RC servo motor with Arduino and potentiometer
   Connect servo control wire to pin 9.
-
+  Connect potentiometer middle pin to Anolog A0.
   Uses Arduino Servo library:
   https://www.arduino.cc/en/Reference/Servo
-
   Minimally modified from
-  https://www.arduino.cc/en/Tutorial/Sweep
+  https://www.arduino.cc/en/Tutorial/Knob
   in the public domain
 */
 
+#include <Servo.h>
 
-#include <Servo.h> // include Arduino Servo library
-
+const int potPin = 0;  // include Arduino Servo library
 const int servoPin = 9;  // create servoPin variable, assign 9
 
-Servo servo;  // create Servo object
+int reading = 0; //variable to track potentiometer reading
+int angle = 0; // variable to track motor angle between 0-180 degrees
 
-int angle = 0;   // variable to track servo position in degrees
-
+Servo servo; // create Servo object
 
 void setup() {
-  servo.attach(servoPin); //attach servo variable to control pin
+  servo.attach(servoPin);  //attach servo variable to control pin
 }
 
-
 void loop() {
-  // scan from 0 to 180 degrees
-  for (angle = 0; angle < 180; angle++) {
-    servo.write(angle);
-    delay(15);
-  }
-  // now scan back from 180 to 0 degrees
-  for (angle = 180; angle > 0; angle--) {
-    servo.write(angle);
-    delay(15);
-  }
+  reading = analogRead(potPin);     // reads pot 0 to 1023
+  angle = reading / 6;              // reduces pot value to 0 to 180-ish to match servo range
+  servo.write(angle);    //writes to servo
 }
